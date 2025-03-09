@@ -40,7 +40,7 @@ var (
 func InitFromConfig(conf *Config, name string) {
 	l, err := NewZapLogger(conf)
 	if err == nil {
-		SetLogger(l, name+".syc")
+		SetLogger(l, name)
 		slog.SetDefault(slog.New(ToSlogHandler(l)))
 	}
 }
