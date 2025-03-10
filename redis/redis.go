@@ -29,27 +29,29 @@ import (
 var ErrNotConfigured = errors.New("Redis is not configured")
 
 type RedisConfig struct {
-	Address  string `yaml:"address,omitempty"`
-	Username string `yaml:"username,omitempty"`
-	Password string `yaml:"password,omitempty"`
-	DB       int    `yaml:"db,omitempty"`
-	// Deprecated: use TLS instead of UseTLS
-	UseTLS            bool         `yaml:"use_tls,omitempty"`
-	TLS               *xtls.Config `yaml:"tls,omitempty"`
-	MasterName        string       `yaml:"sentinel_master_name,omitempty"`
-	SentinelUsername  string       `yaml:"sentinel_username,omitempty"`
-	SentinelPassword  string       `yaml:"sentinel_password,omitempty"`
-	SentinelAddresses []string     `yaml:"sentinel_addresses,omitempty"`
-	ClusterAddresses  []string     `yaml:"cluster_addresses,omitempty"`
-	DialTimeout       int          `yaml:"dial_timeout,omitempty"`
-	ReadTimeout       int          `yaml:"read_timeout,omitempty"`
-	WriteTimeout      int          `yaml:"write_timeout,omitempty"`
+	Address           string       `yaml:"address,omitempty"`              // 地址
+	Username          string       `yaml:"username,omitempty"`             // 用户名
+	Password          string       `yaml:"password,omitempty"`             // 密码
+	DB                int          `yaml:"db,omitempty"`                   // 数据库
+	TLS               *xtls.Config `yaml:"tls,omitempty"`                  // 配置TLS
+	MasterName        string       `yaml:"sentinel_master_name,omitempty"` // 哨兵主节点名称
+	SentinelUsername  string       `yaml:"sentinel_username,omitempty"`    // 哨兵用户名
+	SentinelPassword  string       `yaml:"sentinel_password,omitempty"`    // 哨兵密码
+	SentinelAddresses []string     `yaml:"sentinel_addresses,omitempty"`   // 哨兵地址
+	ClusterAddresses  []string     `yaml:"cluster_addresses,omitempty"`    // 集群地址
+	DialTimeout       int          `yaml:"dial_timeout,omitempty"`         // 连接超时时间
+	ReadTimeout       int          `yaml:"read_timeout,omitempty"`         // 读取超时时间
+	WriteTimeout      int          `yaml:"write_timeout,omitempty"`        // 写入超时时间
 	// for clustererd mode only, number of redirects to follow, defaults to 2
-	MaxRedirects *int          `yaml:"max_redirects,omitempty"`
-	PoolTimeout  time.Duration `yaml:"pool_timeout,omitempty"`
-	PoolSize     int           `yaml:"pool_size,omitempty"`
+	MaxRedirects *int          `yaml:"max_redirects,omitempty"` // 集群模式下，重定向次数，默认2
+	PoolTimeout  time.Duration `yaml:"pool_timeout,omitempty"`  // 池超时时间
+	PoolSize     int           `yaml:"pool_size,omitempty"`     // 池大小
+
+	// Deprecated: use TLS instead of UseTLS
+	UseTLS bool `yaml:"use_tls,omitempty"` // 是否使用TLS
 }
 
+// IsConfigured 判断是否配置了Redis
 func (r *RedisConfig) IsConfigured() bool {
 	if r.Address != "" {
 		return true
@@ -63,6 +65,7 @@ func (r *RedisConfig) IsConfigured() bool {
 	return false
 }
 
+// GetMaxRedirects 获取最大重定向次数
 func (r *RedisConfig) GetMaxRedirects() int {
 	if r.MaxRedirects != nil {
 		return *r.MaxRedirects
@@ -70,6 +73,7 @@ func (r *RedisConfig) GetMaxRedirects() int {
 	return 2
 }
 
+// GetRedisClient 获取Redis客户端
 func GetRedisClient(conf *RedisConfig) (redis.UniversalClient, error) {
 	if conf == nil {
 		return nil, nil
