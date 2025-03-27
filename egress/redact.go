@@ -5,6 +5,11 @@ import (
 	"github.com/livekit/protocol/utils"
 )
 
+// RedactUpload 重写Egress的UploadRequest配置
+// 重写Egress的S3配置
+// 重写Egress的GCP配置
+// 重写Egress的Azure配置
+// 重写Egress的AliOSS配置
 func RedactUpload(req UploadRequest) {
 	if s3 := req.GetS3(); s3 != nil {
 		s3.AccessKey = utils.Redact(s3.AccessKey, "{access_key}")
@@ -30,6 +35,9 @@ func RedactUpload(req UploadRequest) {
 	}
 }
 
+// RedactAutoEncodedOutput 重写Egress的AutoEncodedOutput配置
+// 重写Egress的FileOutputs配置
+// 重写Egress的SegmentOutputs配置
 func RedactAutoEncodedOutput(out AutoEncodedOutput) {
 	if files := out.GetFileOutputs(); len(files) == 1 {
 		RedactUpload(files[0])
@@ -39,6 +47,11 @@ func RedactAutoEncodedOutput(out AutoEncodedOutput) {
 	}
 }
 
+// RedactEncodedOutputs 重写Egress的EncodedOutput配置
+// 重写Egress的AutoEncodedOutput配置
+// 重写Egress的StreamOutputs配置
+// 重写Egress的ImageOutputs配置
+// 重写Egress的EncodedOutputDeprecated配置
 func RedactEncodedOutputs(out EncodedOutput) {
 	RedactAutoEncodedOutput(out)
 

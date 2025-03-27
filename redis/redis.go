@@ -26,8 +26,10 @@ import (
 	"github.com/livekit/protocol/logger"
 )
 
+// ErrNotConfigured 未配置Redis
 var ErrNotConfigured = errors.New("Redis is not configured")
 
+// RedisConfig Redis配置
 type RedisConfig struct {
 	Address           string       `yaml:"address,omitempty"`              // 地址
 	Username          string       `yaml:"username,omitempty"`             // 用户名

@@ -24,6 +24,9 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
+// Proto 将proto.Message转换为zapcore.ObjectMarshaler
+// 如果val为nil，则返回nil
+// 否则，返回protoMarshaller{val.ProtoReflect()}
 func Proto(val proto.Message) zapcore.ObjectMarshaler {
 	if val == nil {
 		return nil

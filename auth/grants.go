@@ -111,6 +111,8 @@ func (c *ClaimGrants) MarshalLogObject(e zapcore.ObjectEncoder) error {
 
 // -------------------------------------------------------------
 
+// 视频权限
+// 视频权限是参与者在房间中的权限，包括创建房间、列出房间、录制房间、管理房间、加入房间、发布视频、订阅视频、更新元数据、管理入站、隐藏、录制、代理、订阅指标等。
 type VideoGrant struct {
 	// actions on rooms
 	RoomCreate bool `json:"roomCreate,omitempty"`

@@ -120,8 +120,8 @@ func NewTypedSignalServer(nodeID livekit.NodeID, svc SignalServerImpl, bus psrpc
 	return NewSignalServer[livekit.NodeID](svc, bus, psrpc.WithServerOptions(opts...), psrpc.WithServerID(string(nodeID)))
 }
 
-type TypedRoomManagerClient = RoomManagerClient[livekit.NodeID]
-type TypedRoomManagerServer = RoomManagerServer[livekit.NodeID]
+type TypedRoomManagerClient = RoomManagerClient[livekit.NodeID] // 房间管理客户端
+type TypedRoomManagerServer = RoomManagerServer[livekit.NodeID] // 房间管理服务端
 
 func NewTypedRoomManagerClient(bus psrpc.MessageBus, opts ...psrpc.ClientOption) (TypedRoomManagerClient, error) {
 	return NewRoomManagerClient[livekit.NodeID](bus, opts...)

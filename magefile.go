@@ -74,6 +74,7 @@ func Proto() error {
 		"rpc/roommanager.proto",
 		"rpc/signal.proto",
 		"rpc/sip.proto",
+		"rpc/ddt.proto",
 	}
 
 	fmt.Println("generating protobuf")
