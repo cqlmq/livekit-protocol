@@ -35,15 +35,16 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 节点类型
 type NodeType int32
 
 const (
-	NodeType_SERVER     NodeType = 0
-	NodeType_CONTROLLER NodeType = 1
-	NodeType_MEDIA      NodeType = 2
-	NodeType_TURN       NodeType = 4
-	NodeType_SWEEPER    NodeType = 5
-	NodeType_DIRECTOR   NodeType = 6
+	NodeType_SERVER     NodeType = 0 // 服务器
+	NodeType_CONTROLLER NodeType = 1 // 控制器
+	NodeType_MEDIA      NodeType = 2 // 媒体
+	NodeType_TURN       NodeType = 4 // TURN中继
+	NodeType_SWEEPER    NodeType = 5 // 清理器
+	NodeType_DIRECTOR   NodeType = 6 // 导演
 )
 
 // Enum value maps for NodeType.
@@ -93,12 +94,13 @@ func (NodeType) EnumDescriptor() ([]byte, []int) {
 	return file_livekit_internal_proto_rawDescGZIP(), []int{0}
 }
 
+// 节点状态
 type NodeState int32
 
 const (
-	NodeState_STARTING_UP   NodeState = 0
-	NodeState_SERVING       NodeState = 1
-	NodeState_SHUTTING_DOWN NodeState = 2
+	NodeState_STARTING_UP   NodeState = 0 // 启动中
+	NodeState_SERVING       NodeState = 1 // 服务中
+	NodeState_SHUTTING_DOWN NodeState = 2 // 关闭中
 )
 
 // Enum value maps for NodeState.
@@ -142,12 +144,13 @@ func (NodeState) EnumDescriptor() ([]byte, []int) {
 	return file_livekit_internal_proto_rawDescGZIP(), []int{1}
 }
 
+// ICE候选人类型
 type ICECandidateType int32
 
 const (
-	ICECandidateType_ICT_NONE ICECandidateType = 0
-	ICECandidateType_ICT_TCP  ICECandidateType = 1
-	ICECandidateType_ICT_TLS  ICECandidateType = 2
+	ICECandidateType_ICT_NONE ICECandidateType = 0 // 无
+	ICECandidateType_ICT_TCP  ICECandidateType = 1 // TCP
+	ICECandidateType_ICT_TLS  ICECandidateType = 2 // TLS
 )
 
 // Enum value maps for ICECandidateType.
@@ -191,15 +194,16 @@ func (ICECandidateType) EnumDescriptor() ([]byte, []int) {
 	return file_livekit_internal_proto_rawDescGZIP(), []int{2}
 }
 
+// 节点
 type Node struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Ip            string                 `protobuf:"bytes,2,opt,name=ip,proto3" json:"ip,omitempty"`
-	NumCpus       uint32                 `protobuf:"varint,3,opt,name=num_cpus,json=numCpus,proto3" json:"num_cpus,omitempty"`
-	Stats         *NodeStats             `protobuf:"bytes,4,opt,name=stats,proto3" json:"stats,omitempty"`
-	Type          NodeType               `protobuf:"varint,5,opt,name=type,proto3,enum=livekit.NodeType" json:"type,omitempty"`
-	State         NodeState              `protobuf:"varint,6,opt,name=state,proto3,enum=livekit.NodeState" json:"state,omitempty"`
-	Region        string                 `protobuf:"bytes,7,opt,name=region,proto3" json:"region,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`                               // 节点ID
+	Ip            string                 `protobuf:"bytes,2,opt,name=ip,proto3" json:"ip,omitempty"`                               // 节点IP
+	NumCpus       uint32                 `protobuf:"varint,3,opt,name=num_cpus,json=numCpus,proto3" json:"num_cpus,omitempty"`     // 节点CPU数量
+	Stats         *NodeStats             `protobuf:"bytes,4,opt,name=stats,proto3" json:"stats,omitempty"`                         // 节点状态
+	Type          NodeType               `protobuf:"varint,5,opt,name=type,proto3,enum=livekit.NodeType" json:"type,omitempty"`    // 节点类型
+	State         NodeState              `protobuf:"varint,6,opt,name=state,proto3,enum=livekit.NodeState" json:"state,omitempty"` // 节点状态
+	Region        string                 `protobuf:"bytes,7,opt,name=region,proto3" json:"region,omitempty"`                       // 节点区域
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -283,65 +287,64 @@ func (x *Node) GetRegion() string {
 	return ""
 }
 
+// 节点统计信息
 type NodeStats struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// when server was started
-	StartedAt int64 `protobuf:"varint,1,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"`
-	// when server last reported its status
-	UpdatedAt int64 `protobuf:"varint,2,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	// room
-	NumRooms                     int32   `protobuf:"varint,3,opt,name=num_rooms,json=numRooms,proto3" json:"num_rooms,omitempty"`
-	NumClients                   int32   `protobuf:"varint,4,opt,name=num_clients,json=numClients,proto3" json:"num_clients,omitempty"`
-	NumTracksIn                  int32   `protobuf:"varint,5,opt,name=num_tracks_in,json=numTracksIn,proto3" json:"num_tracks_in,omitempty"`
-	NumTracksOut                 int32   `protobuf:"varint,6,opt,name=num_tracks_out,json=numTracksOut,proto3" json:"num_tracks_out,omitempty"`
-	NumTrackPublishAttempts      int32   `protobuf:"varint,36,opt,name=num_track_publish_attempts,json=numTrackPublishAttempts,proto3" json:"num_track_publish_attempts,omitempty"`
-	TrackPublishAttemptsPerSec   float32 `protobuf:"fixed32,37,opt,name=track_publish_attempts_per_sec,json=trackPublishAttemptsPerSec,proto3" json:"track_publish_attempts_per_sec,omitempty"`
-	NumTrackPublishSuccess       int32   `protobuf:"varint,38,opt,name=num_track_publish_success,json=numTrackPublishSuccess,proto3" json:"num_track_publish_success,omitempty"`
-	TrackPublishSuccessPerSec    float32 `protobuf:"fixed32,39,opt,name=track_publish_success_per_sec,json=trackPublishSuccessPerSec,proto3" json:"track_publish_success_per_sec,omitempty"`
-	NumTrackSubscribeAttempts    int32   `protobuf:"varint,40,opt,name=num_track_subscribe_attempts,json=numTrackSubscribeAttempts,proto3" json:"num_track_subscribe_attempts,omitempty"`
-	TrackSubscribeAttemptsPerSec float32 `protobuf:"fixed32,41,opt,name=track_subscribe_attempts_per_sec,json=trackSubscribeAttemptsPerSec,proto3" json:"track_subscribe_attempts_per_sec,omitempty"`
-	NumTrackSubscribeSuccess     int32   `protobuf:"varint,42,opt,name=num_track_subscribe_success,json=numTrackSubscribeSuccess,proto3" json:"num_track_subscribe_success,omitempty"`
-	TrackSubscribeSuccessPerSec  float32 `protobuf:"fixed32,43,opt,name=track_subscribe_success_per_sec,json=trackSubscribeSuccessPerSec,proto3" json:"track_subscribe_success_per_sec,omitempty"`
-	// packet
-	BytesIn          uint64  `protobuf:"varint,7,opt,name=bytes_in,json=bytesIn,proto3" json:"bytes_in,omitempty"`
-	BytesOut         uint64  `protobuf:"varint,8,opt,name=bytes_out,json=bytesOut,proto3" json:"bytes_out,omitempty"`
-	PacketsIn        uint64  `protobuf:"varint,9,opt,name=packets_in,json=packetsIn,proto3" json:"packets_in,omitempty"`
-	PacketsOut       uint64  `protobuf:"varint,10,opt,name=packets_out,json=packetsOut,proto3" json:"packets_out,omitempty"`
-	NackTotal        uint64  `protobuf:"varint,11,opt,name=nack_total,json=nackTotal,proto3" json:"nack_total,omitempty"`
-	BytesInPerSec    float32 `protobuf:"fixed32,12,opt,name=bytes_in_per_sec,json=bytesInPerSec,proto3" json:"bytes_in_per_sec,omitempty"`
-	BytesOutPerSec   float32 `protobuf:"fixed32,13,opt,name=bytes_out_per_sec,json=bytesOutPerSec,proto3" json:"bytes_out_per_sec,omitempty"`
-	PacketsInPerSec  float32 `protobuf:"fixed32,14,opt,name=packets_in_per_sec,json=packetsInPerSec,proto3" json:"packets_in_per_sec,omitempty"`
-	PacketsOutPerSec float32 `protobuf:"fixed32,15,opt,name=packets_out_per_sec,json=packetsOutPerSec,proto3" json:"packets_out_per_sec,omitempty"`
-	NackPerSec       float32 `protobuf:"fixed32,16,opt,name=nack_per_sec,json=nackPerSec,proto3" json:"nack_per_sec,omitempty"`
-	// system
-	NumCpus                    uint32  `protobuf:"varint,17,opt,name=num_cpus,json=numCpus,proto3" json:"num_cpus,omitempty"`
-	LoadAvgLast1Min            float32 `protobuf:"fixed32,18,opt,name=load_avg_last1min,json=loadAvgLast1min,proto3" json:"load_avg_last1min,omitempty"`
-	LoadAvgLast5Min            float32 `protobuf:"fixed32,19,opt,name=load_avg_last5min,json=loadAvgLast5min,proto3" json:"load_avg_last5min,omitempty"`
-	LoadAvgLast15Min           float32 `protobuf:"fixed32,20,opt,name=load_avg_last15min,json=loadAvgLast15min,proto3" json:"load_avg_last15min,omitempty"`
-	CpuLoad                    float32 `protobuf:"fixed32,21,opt,name=cpu_load,json=cpuLoad,proto3" json:"cpu_load,omitempty"`
-	MemoryLoad                 float32 `protobuf:"fixed32,33,opt,name=memory_load,json=memoryLoad,proto3" json:"memory_load,omitempty"` // deprecated
-	MemoryTotal                uint64  `protobuf:"varint,34,opt,name=memory_total,json=memoryTotal,proto3" json:"memory_total,omitempty"`
-	MemoryUsed                 uint64  `protobuf:"varint,35,opt,name=memory_used,json=memoryUsed,proto3" json:"memory_used,omitempty"`
-	SysPacketsOut              uint32  `protobuf:"varint,28,opt,name=sys_packets_out,json=sysPacketsOut,proto3" json:"sys_packets_out,omitempty"`
-	SysPacketsDropped          uint32  `protobuf:"varint,29,opt,name=sys_packets_dropped,json=sysPacketsDropped,proto3" json:"sys_packets_dropped,omitempty"`
-	SysPacketsOutPerSec        float32 `protobuf:"fixed32,30,opt,name=sys_packets_out_per_sec,json=sysPacketsOutPerSec,proto3" json:"sys_packets_out_per_sec,omitempty"`
-	SysPacketsDroppedPerSec    float32 `protobuf:"fixed32,31,opt,name=sys_packets_dropped_per_sec,json=sysPacketsDroppedPerSec,proto3" json:"sys_packets_dropped_per_sec,omitempty"`
-	SysPacketsDroppedPctPerSec float32 `protobuf:"fixed32,32,opt,name=sys_packets_dropped_pct_per_sec,json=sysPacketsDroppedPctPerSec,proto3" json:"sys_packets_dropped_pct_per_sec,omitempty"`
-	// retransmissions
-	RetransmitBytesOut         uint64  `protobuf:"varint,22,opt,name=retransmit_bytes_out,json=retransmitBytesOut,proto3" json:"retransmit_bytes_out,omitempty"`
-	RetransmitPacketsOut       uint64  `protobuf:"varint,23,opt,name=retransmit_packets_out,json=retransmitPacketsOut,proto3" json:"retransmit_packets_out,omitempty"`
-	RetransmitBytesOutPerSec   float32 `protobuf:"fixed32,24,opt,name=retransmit_bytes_out_per_sec,json=retransmitBytesOutPerSec,proto3" json:"retransmit_bytes_out_per_sec,omitempty"`
-	RetransmitPacketsOutPerSec float32 `protobuf:"fixed32,25,opt,name=retransmit_packets_out_per_sec,json=retransmitPacketsOutPerSec,proto3" json:"retransmit_packets_out_per_sec,omitempty"`
-	// participant joins
-	ParticipantSignalConnected       uint64  `protobuf:"varint,26,opt,name=participant_signal_connected,json=participantSignalConnected,proto3" json:"participant_signal_connected,omitempty"`
-	ParticipantSignalConnectedPerSec float32 `protobuf:"fixed32,27,opt,name=participant_signal_connected_per_sec,json=participantSignalConnectedPerSec,proto3" json:"participant_signal_connected_per_sec,omitempty"`
-	ParticipantRtcConnected          uint64  `protobuf:"varint,44,opt,name=participant_rtc_connected,json=participantRtcConnected,proto3" json:"participant_rtc_connected,omitempty"`
-	ParticipantRtcConnectedPerSec    float32 `protobuf:"fixed32,45,opt,name=participant_rtc_connected_per_sec,json=participantRtcConnectedPerSec,proto3" json:"participant_rtc_connected_per_sec,omitempty"`
-	ParticipantRtcInit               uint64  `protobuf:"varint,46,opt,name=participant_rtc_init,json=participantRtcInit,proto3" json:"participant_rtc_init,omitempty"`
-	ParticipantRtcInitPerSec         float32 `protobuf:"fixed32,47,opt,name=participant_rtc_init_per_sec,json=participantRtcInitPerSec,proto3" json:"participant_rtc_init_per_sec,omitempty"`
-	// forward metrics
-	ForwardLatency uint32 `protobuf:"varint,48,opt,name=forward_latency,json=forwardLatency,proto3" json:"forward_latency,omitempty"`
-	ForwardJitter  uint32 `protobuf:"varint,49,opt,name=forward_jitter,json=forwardJitter,proto3" json:"forward_jitter,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	StartedAt int64                  `protobuf:"varint,1,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"` // 服务器启动时间
+	UpdatedAt int64                  `protobuf:"varint,2,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"` // 服务器最后报告状态时间
+	// 房间
+	NumRooms                     int32   `protobuf:"varint,3,opt,name=num_rooms,json=numRooms,proto3" json:"num_rooms,omitempty"`                                                                     // 房间数量
+	NumClients                   int32   `protobuf:"varint,4,opt,name=num_clients,json=numClients,proto3" json:"num_clients,omitempty"`                                                               // 客户端数量
+	NumTracksIn                  int32   `protobuf:"varint,5,opt,name=num_tracks_in,json=numTracksIn,proto3" json:"num_tracks_in,omitempty"`                                                          // 输入轨道数量
+	NumTracksOut                 int32   `protobuf:"varint,6,opt,name=num_tracks_out,json=numTracksOut,proto3" json:"num_tracks_out,omitempty"`                                                       // 输出轨道数量
+	NumTrackPublishAttempts      int32   `protobuf:"varint,36,opt,name=num_track_publish_attempts,json=numTrackPublishAttempts,proto3" json:"num_track_publish_attempts,omitempty"`                   // 轨道发布尝试次数
+	TrackPublishAttemptsPerSec   float32 `protobuf:"fixed32,37,opt,name=track_publish_attempts_per_sec,json=trackPublishAttemptsPerSec,proto3" json:"track_publish_attempts_per_sec,omitempty"`       // 轨道发布尝试次数/秒
+	NumTrackPublishSuccess       int32   `protobuf:"varint,38,opt,name=num_track_publish_success,json=numTrackPublishSuccess,proto3" json:"num_track_publish_success,omitempty"`                      // 轨道发布成功次数
+	TrackPublishSuccessPerSec    float32 `protobuf:"fixed32,39,opt,name=track_publish_success_per_sec,json=trackPublishSuccessPerSec,proto3" json:"track_publish_success_per_sec,omitempty"`          // 轨道发布成功次数/秒
+	NumTrackSubscribeAttempts    int32   `protobuf:"varint,40,opt,name=num_track_subscribe_attempts,json=numTrackSubscribeAttempts,proto3" json:"num_track_subscribe_attempts,omitempty"`             // 轨道订阅尝试次数
+	TrackSubscribeAttemptsPerSec float32 `protobuf:"fixed32,41,opt,name=track_subscribe_attempts_per_sec,json=trackSubscribeAttemptsPerSec,proto3" json:"track_subscribe_attempts_per_sec,omitempty"` // 轨道订阅尝试次数/秒
+	NumTrackSubscribeSuccess     int32   `protobuf:"varint,42,opt,name=num_track_subscribe_success,json=numTrackSubscribeSuccess,proto3" json:"num_track_subscribe_success,omitempty"`                // 轨道订阅成功次数
+	TrackSubscribeSuccessPerSec  float32 `protobuf:"fixed32,43,opt,name=track_subscribe_success_per_sec,json=trackSubscribeSuccessPerSec,proto3" json:"track_subscribe_success_per_sec,omitempty"`    // 轨道订阅成功次数/秒
+	// 包
+	BytesIn          uint64  `protobuf:"varint,7,opt,name=bytes_in,json=bytesIn,proto3" json:"bytes_in,omitempty"`                                  // 输入字节数
+	BytesOut         uint64  `protobuf:"varint,8,opt,name=bytes_out,json=bytesOut,proto3" json:"bytes_out,omitempty"`                               // 输出字节数
+	PacketsIn        uint64  `protobuf:"varint,9,opt,name=packets_in,json=packetsIn,proto3" json:"packets_in,omitempty"`                            // 输入包数
+	PacketsOut       uint64  `protobuf:"varint,10,opt,name=packets_out,json=packetsOut,proto3" json:"packets_out,omitempty"`                        // 输出包数
+	NackTotal        uint64  `protobuf:"varint,11,opt,name=nack_total,json=nackTotal,proto3" json:"nack_total,omitempty"`                           // NACK总数
+	BytesInPerSec    float32 `protobuf:"fixed32,12,opt,name=bytes_in_per_sec,json=bytesInPerSec,proto3" json:"bytes_in_per_sec,omitempty"`          // 输入字节数/秒
+	BytesOutPerSec   float32 `protobuf:"fixed32,13,opt,name=bytes_out_per_sec,json=bytesOutPerSec,proto3" json:"bytes_out_per_sec,omitempty"`       // 输出字节数/秒
+	PacketsInPerSec  float32 `protobuf:"fixed32,14,opt,name=packets_in_per_sec,json=packetsInPerSec,proto3" json:"packets_in_per_sec,omitempty"`    // 输入包数/秒
+	PacketsOutPerSec float32 `protobuf:"fixed32,15,opt,name=packets_out_per_sec,json=packetsOutPerSec,proto3" json:"packets_out_per_sec,omitempty"` // 输出包数/秒
+	NackPerSec       float32 `protobuf:"fixed32,16,opt,name=nack_per_sec,json=nackPerSec,proto3" json:"nack_per_sec,omitempty"`                     // NACK/秒
+	// 系统
+	NumCpus                    uint32  `protobuf:"varint,17,opt,name=num_cpus,json=numCpus,proto3" json:"num_cpus,omitempty"`                                                                   // CPU数量
+	LoadAvgLast1Min            float32 `protobuf:"fixed32,18,opt,name=load_avg_last1min,json=loadAvgLast1min,proto3" json:"load_avg_last1min,omitempty"`                                        // 过去1分钟平均负载
+	LoadAvgLast5Min            float32 `protobuf:"fixed32,19,opt,name=load_avg_last5min,json=loadAvgLast5min,proto3" json:"load_avg_last5min,omitempty"`                                        // 过去5分钟平均负载
+	LoadAvgLast15Min           float32 `protobuf:"fixed32,20,opt,name=load_avg_last15min,json=loadAvgLast15min,proto3" json:"load_avg_last15min,omitempty"`                                     // 过去15分钟平均负载
+	CpuLoad                    float32 `protobuf:"fixed32,21,opt,name=cpu_load,json=cpuLoad,proto3" json:"cpu_load,omitempty"`                                                                  // CPU负载
+	MemoryLoad                 float32 `protobuf:"fixed32,33,opt,name=memory_load,json=memoryLoad,proto3" json:"memory_load,omitempty"`                                                         // 内存负载
+	MemoryTotal                uint64  `protobuf:"varint,34,opt,name=memory_total,json=memoryTotal,proto3" json:"memory_total,omitempty"`                                                       // 内存总量
+	MemoryUsed                 uint64  `protobuf:"varint,35,opt,name=memory_used,json=memoryUsed,proto3" json:"memory_used,omitempty"`                                                          // 内存使用量
+	SysPacketsOut              uint32  `protobuf:"varint,28,opt,name=sys_packets_out,json=sysPacketsOut,proto3" json:"sys_packets_out,omitempty"`                                               // 系统输出包数
+	SysPacketsDropped          uint32  `protobuf:"varint,29,opt,name=sys_packets_dropped,json=sysPacketsDropped,proto3" json:"sys_packets_dropped,omitempty"`                                   // 系统丢包数
+	SysPacketsOutPerSec        float32 `protobuf:"fixed32,30,opt,name=sys_packets_out_per_sec,json=sysPacketsOutPerSec,proto3" json:"sys_packets_out_per_sec,omitempty"`                        // 系统输出包数/秒
+	SysPacketsDroppedPerSec    float32 `protobuf:"fixed32,31,opt,name=sys_packets_dropped_per_sec,json=sysPacketsDroppedPerSec,proto3" json:"sys_packets_dropped_per_sec,omitempty"`            // 系统丢包数/秒
+	SysPacketsDroppedPctPerSec float32 `protobuf:"fixed32,32,opt,name=sys_packets_dropped_pct_per_sec,json=sysPacketsDroppedPctPerSec,proto3" json:"sys_packets_dropped_pct_per_sec,omitempty"` // 系统丢包率/秒
+	// retransmissions 重传
+	RetransmitBytesOut         uint64  `protobuf:"varint,22,opt,name=retransmit_bytes_out,json=retransmitBytesOut,proto3" json:"retransmit_bytes_out,omitempty"`                              // 重传字节数
+	RetransmitPacketsOut       uint64  `protobuf:"varint,23,opt,name=retransmit_packets_out,json=retransmitPacketsOut,proto3" json:"retransmit_packets_out,omitempty"`                        // 重传包数
+	RetransmitBytesOutPerSec   float32 `protobuf:"fixed32,24,opt,name=retransmit_bytes_out_per_sec,json=retransmitBytesOutPerSec,proto3" json:"retransmit_bytes_out_per_sec,omitempty"`       // 重传字节数/秒
+	RetransmitPacketsOutPerSec float32 `protobuf:"fixed32,25,opt,name=retransmit_packets_out_per_sec,json=retransmitPacketsOutPerSec,proto3" json:"retransmit_packets_out_per_sec,omitempty"` // 重传包数/秒
+	// participant joins 参与者加入
+	ParticipantSignalConnected       uint64  `protobuf:"varint,26,opt,name=participant_signal_connected,json=participantSignalConnected,proto3" json:"participant_signal_connected,omitempty"`                        // 参与者信号连接数
+	ParticipantSignalConnectedPerSec float32 `protobuf:"fixed32,27,opt,name=participant_signal_connected_per_sec,json=participantSignalConnectedPerSec,proto3" json:"participant_signal_connected_per_sec,omitempty"` // 参与者信号连接数/秒
+	ParticipantRtcConnected          uint64  `protobuf:"varint,44,opt,name=participant_rtc_connected,json=participantRtcConnected,proto3" json:"participant_rtc_connected,omitempty"`                                 // 参与者RTC连接数
+	ParticipantRtcConnectedPerSec    float32 `protobuf:"fixed32,45,opt,name=participant_rtc_connected_per_sec,json=participantRtcConnectedPerSec,proto3" json:"participant_rtc_connected_per_sec,omitempty"`          // 参与者RTC连接数/秒
+	ParticipantRtcInit               uint64  `protobuf:"varint,46,opt,name=participant_rtc_init,json=participantRtcInit,proto3" json:"participant_rtc_init,omitempty"`                                                // 参与者RTC初始化数
+	ParticipantRtcInitPerSec         float32 `protobuf:"fixed32,47,opt,name=participant_rtc_init_per_sec,json=participantRtcInitPerSec,proto3" json:"participant_rtc_init_per_sec,omitempty"`                         // 参与者RTC初始化数/秒
+	// forward metrics  转发指标
+	ForwardLatency uint32 `protobuf:"varint,48,opt,name=forward_latency,json=forwardLatency,proto3" json:"forward_latency,omitempty"` // 转发延迟
+	ForwardJitter  uint32 `protobuf:"varint,49,opt,name=forward_jitter,json=forwardJitter,proto3" json:"forward_jitter,omitempty"`    // 转发抖动
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -719,27 +722,28 @@ func (x *NodeStats) GetForwardJitter() uint32 {
 	return 0
 }
 
+// 开始会话
 type StartSession struct {
 	state        protoimpl.MessageState `protogen:"open.v1"`
-	RoomName     string                 `protobuf:"bytes,1,opt,name=room_name,json=roomName,proto3" json:"room_name,omitempty"`
-	Identity     string                 `protobuf:"bytes,2,opt,name=identity,proto3" json:"identity,omitempty"`
-	ConnectionId string                 `protobuf:"bytes,3,opt,name=connection_id,json=connectionId,proto3" json:"connection_id,omitempty"`
-	// if a client is reconnecting (i.e. resume instead of restart)
-	Reconnect     bool        `protobuf:"varint,4,opt,name=reconnect,proto3" json:"reconnect,omitempty"`
-	AutoSubscribe bool        `protobuf:"varint,9,opt,name=auto_subscribe,json=autoSubscribe,proto3" json:"auto_subscribe,omitempty"`
-	Hidden        bool        `protobuf:"varint,10,opt,name=hidden,proto3" json:"hidden,omitempty"`
-	Client        *ClientInfo `protobuf:"bytes,11,opt,name=client,proto3" json:"client,omitempty"`
-	Recorder      bool        `protobuf:"varint,12,opt,name=recorder,proto3" json:"recorder,omitempty"`
-	Name          string      `protobuf:"bytes,13,opt,name=name,proto3" json:"name,omitempty"`
-	// A user's ClaimGrants serialized in JSON
-	GrantsJson     string `protobuf:"bytes,14,opt,name=grants_json,json=grantsJson,proto3" json:"grants_json,omitempty"`
-	AdaptiveStream bool   `protobuf:"varint,15,opt,name=adaptive_stream,json=adaptiveStream,proto3" json:"adaptive_stream,omitempty"`
+	RoomName     string                 `protobuf:"bytes,1,opt,name=room_name,json=roomName,proto3" json:"room_name,omitempty"`             // 房间名称
+	Identity     string                 `protobuf:"bytes,2,opt,name=identity,proto3" json:"identity,omitempty"`                             // 身份
+	ConnectionId string                 `protobuf:"bytes,3,opt,name=connection_id,json=connectionId,proto3" json:"connection_id,omitempty"` // 连接ID
+	// if a client is reconnecting (i.e. resume instead of restart) 如果客户端正在重新连接（即恢复而不是重新启动）
+	Reconnect     bool        `protobuf:"varint,4,opt,name=reconnect,proto3" json:"reconnect,omitempty"`                              // 是否重新连接
+	AutoSubscribe bool        `protobuf:"varint,9,opt,name=auto_subscribe,json=autoSubscribe,proto3" json:"auto_subscribe,omitempty"` // 是否自动订阅
+	Hidden        bool        `protobuf:"varint,10,opt,name=hidden,proto3" json:"hidden,omitempty"`                                   // 是否隐藏
+	Client        *ClientInfo `protobuf:"bytes,11,opt,name=client,proto3" json:"client,omitempty"`                                    // 客户端信息
+	Recorder      bool        `protobuf:"varint,12,opt,name=recorder,proto3" json:"recorder,omitempty"`                               // 是否记录
+	Name          string      `protobuf:"bytes,13,opt,name=name,proto3" json:"name,omitempty"`                                        // 名称
+	// A user's ClaimGrants serialized in JSON 用户声明的序列化JSON
+	GrantsJson     string `protobuf:"bytes,14,opt,name=grants_json,json=grantsJson,proto3" json:"grants_json,omitempty"`              // 用户声明的序列化JSON
+	AdaptiveStream bool   `protobuf:"varint,15,opt,name=adaptive_stream,json=adaptiveStream,proto3" json:"adaptive_stream,omitempty"` // 是否自适应流
 	// if reconnect, client will set current sid
-	ParticipantId        string             `protobuf:"bytes,16,opt,name=participant_id,json=participantId,proto3" json:"participant_id,omitempty"`
-	ReconnectReason      ReconnectReason    `protobuf:"varint,17,opt,name=reconnect_reason,json=reconnectReason,proto3,enum=livekit.ReconnectReason" json:"reconnect_reason,omitempty"`
-	SubscriberAllowPause *bool              `protobuf:"varint,18,opt,name=subscriber_allow_pause,json=subscriberAllowPause,proto3,oneof" json:"subscriber_allow_pause,omitempty"`
-	DisableIceLite       bool               `protobuf:"varint,19,opt,name=disable_ice_lite,json=disableIceLite,proto3" json:"disable_ice_lite,omitempty"`
-	CreateRoom           *CreateRoomRequest `protobuf:"bytes,20,opt,name=create_room,json=createRoom,proto3" json:"create_room,omitempty"`
+	ParticipantId        string             `protobuf:"bytes,16,opt,name=participant_id,json=participantId,proto3" json:"participant_id,omitempty"`                                     // 参与者ID
+	ReconnectReason      ReconnectReason    `protobuf:"varint,17,opt,name=reconnect_reason,json=reconnectReason,proto3,enum=livekit.ReconnectReason" json:"reconnect_reason,omitempty"` // 重新连接原因
+	SubscriberAllowPause *bool              `protobuf:"varint,18,opt,name=subscriber_allow_pause,json=subscriberAllowPause,proto3,oneof" json:"subscriber_allow_pause,omitempty"`       // 订阅者是否允许暂停
+	DisableIceLite       bool               `protobuf:"varint,19,opt,name=disable_ice_lite,json=disableIceLite,proto3" json:"disable_ice_lite,omitempty"`                               // 是否禁用ICE lite
+	CreateRoom           *CreateRoomRequest `protobuf:"bytes,20,opt,name=create_room,json=createRoom,proto3" json:"create_room,omitempty"`                                              // 创建房间请求
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -887,14 +891,15 @@ func (x *StartSession) GetCreateRoom() *CreateRoomRequest {
 }
 
 // room info that should not be returned to clients
+// 不应返回给客户端的房间信息
 type RoomInternal struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	TrackEgress       *AutoTrackEgress       `protobuf:"bytes,1,opt,name=track_egress,json=trackEgress,proto3" json:"track_egress,omitempty"`
-	ParticipantEgress *AutoParticipantEgress `protobuf:"bytes,2,opt,name=participant_egress,json=participantEgress,proto3" json:"participant_egress,omitempty"`
-	PlayoutDelay      *PlayoutDelay          `protobuf:"bytes,3,opt,name=playout_delay,json=playoutDelay,proto3" json:"playout_delay,omitempty"`
-	AgentDispatches   []*RoomAgentDispatch   `protobuf:"bytes,5,rep,name=agent_dispatches,json=agentDispatches,proto3" json:"agent_dispatches,omitempty"`
-	SyncStreams       bool                   `protobuf:"varint,4,opt,name=sync_streams,json=syncStreams,proto3" json:"sync_streams,omitempty"`
-	ReplayEnabled     bool                   `protobuf:"varint,6,opt,name=replay_enabled,json=replayEnabled,proto3" json:"replay_enabled,omitempty"`
+	TrackEgress       *AutoTrackEgress       `protobuf:"bytes,1,opt,name=track_egress,json=trackEgress,proto3" json:"track_egress,omitempty"`                   // 自动轨道输出
+	ParticipantEgress *AutoParticipantEgress `protobuf:"bytes,2,opt,name=participant_egress,json=participantEgress,proto3" json:"participant_egress,omitempty"` // 自动参与者输出
+	PlayoutDelay      *PlayoutDelay          `protobuf:"bytes,3,opt,name=playout_delay,json=playoutDelay,proto3" json:"playout_delay,omitempty"`                // 播放延迟
+	AgentDispatches   []*RoomAgentDispatch   `protobuf:"bytes,5,rep,name=agent_dispatches,json=agentDispatches,proto3" json:"agent_dispatches,omitempty"`       // 代理调度
+	SyncStreams       bool                   `protobuf:"varint,4,opt,name=sync_streams,json=syncStreams,proto3" json:"sync_streams,omitempty"`                  // 同步流
+	ReplayEnabled     bool                   `protobuf:"varint,6,opt,name=replay_enabled,json=replayEnabled,proto3" json:"replay_enabled,omitempty"`            // 回放启用
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
 }
@@ -971,10 +976,11 @@ func (x *RoomInternal) GetReplayEnabled() bool {
 	return false
 }
 
+// ICE配置
 type ICEConfig struct {
 	state                protoimpl.MessageState `protogen:"open.v1"`
-	PreferenceSubscriber ICECandidateType       `protobuf:"varint,1,opt,name=preference_subscriber,json=preferenceSubscriber,proto3,enum=livekit.ICECandidateType" json:"preference_subscriber,omitempty"`
-	PreferencePublisher  ICECandidateType       `protobuf:"varint,2,opt,name=preference_publisher,json=preferencePublisher,proto3,enum=livekit.ICECandidateType" json:"preference_publisher,omitempty"`
+	PreferenceSubscriber ICECandidateType       `protobuf:"varint,1,opt,name=preference_subscriber,json=preferenceSubscriber,proto3,enum=livekit.ICECandidateType" json:"preference_subscriber,omitempty"` // 订阅者偏好
+	PreferencePublisher  ICECandidateType       `protobuf:"varint,2,opt,name=preference_publisher,json=preferencePublisher,proto3,enum=livekit.ICECandidateType" json:"preference_publisher,omitempty"`    // 发布者偏好
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }

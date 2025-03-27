@@ -26,13 +26,16 @@ import (
 	"github.com/livekit/psrpc/pkg/middleware"
 )
 
+// psrpc配置
+// 在livekit-server中的config.yaml配置
 type PSRPCConfig struct {
-	MaxAttempts int           `yaml:"max_attempts,omitempty"`
-	Timeout     time.Duration `yaml:"timeout,omitempty"`
-	Backoff     time.Duration `yaml:"backoff,omitempty"`
-	BufferSize  int           `yaml:"buffer_size,omitempty"`
+	MaxAttempts int           `yaml:"max_attempts,omitempty"` // 最大重试次数
+	Timeout     time.Duration `yaml:"timeout,omitempty"`      // 超时时间
+	Backoff     time.Duration `yaml:"backoff,omitempty"`      // 重试间隔
+	BufferSize  int           `yaml:"buffer_size,omitempty"`  // 缓冲区大小
 }
 
+// 默认psrpc配置
 var DefaultPSRPCConfig = PSRPCConfig{
 	MaxAttempts: 3,
 	Timeout:     3 * time.Second,
@@ -40,13 +43,15 @@ var DefaultPSRPCConfig = PSRPCConfig{
 	BufferSize:  1000,
 }
 
+// 客户端参数
 type ClientParams struct {
-	PSRPCConfig
-	Bus      psrpc.MessageBus
-	Logger   logger.Logger
-	Observer middleware.MetricsObserver
+	PSRPCConfig                            // psrpc配置
+	Bus         psrpc.MessageBus           // 消息总线
+	Logger      logger.Logger              // 日志记录器
+	Observer    middleware.MetricsObserver // 指标观察器
 }
 
+// 创建客户端参数
 func NewClientParams(
 	config PSRPCConfig,
 	bus psrpc.MessageBus,
@@ -61,6 +66,7 @@ func NewClientParams(
 	}
 }
 
+// 获取客户端选项
 func (p *ClientParams) Options() []psrpc.ClientOption {
 	opts := make([]psrpc.ClientOption, 0, 4)
 	if p.BufferSize != 0 {
@@ -82,10 +88,12 @@ func (p *ClientParams) Options() []psrpc.ClientOption {
 	return opts
 }
 
+// 获取配置中的总线与客户端选项（多项合并）
 func (p *ClientParams) Args() (psrpc.MessageBus, psrpc.ClientOption) {
 	return p.Bus, psrpc.WithClientOptions(p.Options()...)
 }
 
+// 添加服务端指标观察器与日志记录器到服务端选项
 func WithServerObservability(logger logger.Logger) psrpc.ServerOption {
 	return psrpc.WithServerOptions(
 		middleware.WithServerMetrics(PSRPCMetricsObserver{}),
@@ -93,6 +101,7 @@ func WithServerObservability(logger logger.Logger) psrpc.ServerOption {
 	)
 }
 
+// 添加服务端缓冲区大小与服务端指标观察器与日志记录器到服务端选项
 func WithDefaultServerOptions(psrpcConfig PSRPCConfig, logger logger.Logger) psrpc.ServerOption {
 	return psrpc.WithServerOptions(
 		psrpc.WithServerChannelSize(psrpcConfig.BufferSize),
@@ -197,17 +206,22 @@ func NewTypedAgentDispatchInternalServer(svc AgentDispatchInternalServerImpl, bu
 	return NewAgentDispatchInternalServer[RoomTopic](svc, bus, opts...)
 }
 
+// 保持连接的发布订阅
+//
 //counterfeiter:generate . KeepalivePubSub
 type KeepalivePubSub interface {
 	KeepaliveClient[livekit.NodeID]
 	KeepaliveServer[livekit.NodeID]
 }
 
+// 保持连接的发布订阅结构体，用于实现KeepalivePubSub接口
 type keepalivePubSub struct {
 	KeepaliveClient[livekit.NodeID]
 	KeepaliveServer[livekit.NodeID]
 }
 
+// 创建保持连接的发布订阅
+// 最主要的简化的server中调用本功能时的复杂性
 func NewKeepalivePubSub(params ClientParams) (KeepalivePubSub, error) {
 	client, err := NewKeepaliveClient[livekit.NodeID](params.Args())
 	if err != nil {

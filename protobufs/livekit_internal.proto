@@ -20,143 +20,150 @@ option csharp_namespace = "LiveKit.Proto";
 option ruby_package = "LiveKit::Proto";
 
 // internal protos, not exposed to clients
+// 内部协议，不暴露给客户端
 import "livekit_models.proto";
 import "livekit_egress.proto";
 import "livekit_agent_dispatch.proto";
 import "livekit_room.proto";
 
+// 节点类型
 enum NodeType {
-  SERVER = 0;
-  CONTROLLER = 1;
-  MEDIA = 2;
-  TURN = 4;
-  SWEEPER = 5;
-  DIRECTOR = 6;
+  SERVER = 0; // 服务器
+  CONTROLLER = 1; // 控制器
+  MEDIA = 2; // 媒体
+  TURN = 4; // TURN中继
+  SWEEPER = 5; // 清理器
+  DIRECTOR = 6; // 导演
 }
 
+// 节点状态
 enum NodeState {
-  STARTING_UP = 0;
-  SERVING = 1;
-  SHUTTING_DOWN = 2;
+  STARTING_UP = 0; // 启动中
+  SERVING = 1; // 服务中
+  SHUTTING_DOWN = 2; // 关闭中
 }
 
+// 节点
 message Node {
-  string id = 1;
-  string ip = 2;
-  uint32 num_cpus = 3;
-  NodeStats stats = 4;
-  NodeType type = 5;
-  NodeState state = 6;
-  string region = 7;
+  string id = 1; // 节点ID
+  string ip = 2; // 节点IP
+  uint32 num_cpus = 3; // 节点CPU数量
+  NodeStats stats = 4; // 节点状态
+  NodeType type = 5; // 节点类型
+  NodeState state = 6; // 节点状态
+  string region = 7; // 节点区域
 }
 
+// 节点统计信息
 message NodeStats {
-  // when server was started
-  int64 started_at = 1;
-  // when server last reported its status
-  int64 updated_at = 2;
+  int64 started_at = 1; // 服务器启动时间
+  int64 updated_at = 2; // 服务器最后报告状态时间
 
-  // room
-  int32 num_rooms = 3;
-  int32 num_clients = 4;
-  int32 num_tracks_in = 5;
-  int32 num_tracks_out = 6;
-  int32 num_track_publish_attempts = 36;
-  float track_publish_attempts_per_sec = 37;
-  int32 num_track_publish_success = 38;
-  float track_publish_success_per_sec = 39;
-  int32 num_track_subscribe_attempts = 40;
-  float track_subscribe_attempts_per_sec = 41;
-  int32 num_track_subscribe_success = 42;
-  float track_subscribe_success_per_sec = 43;
+  // 房间
+  int32 num_rooms = 3; // 房间数量
+  int32 num_clients = 4; // 客户端数量
+  int32 num_tracks_in = 5; // 输入轨道数量
+  int32 num_tracks_out = 6; // 输出轨道数量
+  int32 num_track_publish_attempts = 36; // 轨道发布尝试次数
+  float track_publish_attempts_per_sec = 37; // 轨道发布尝试次数/秒
+  int32 num_track_publish_success = 38; // 轨道发布成功次数
+  float track_publish_success_per_sec = 39; // 轨道发布成功次数/秒
+  int32 num_track_subscribe_attempts = 40; // 轨道订阅尝试次数
+  float track_subscribe_attempts_per_sec = 41; // 轨道订阅尝试次数/秒
+  int32 num_track_subscribe_success = 42; // 轨道订阅成功次数
+  float track_subscribe_success_per_sec = 43; // 轨道订阅成功次数/秒
 
-  // packet
-  uint64 bytes_in = 7;
-  uint64 bytes_out = 8;
-  uint64 packets_in = 9;
-  uint64 packets_out = 10;
-  uint64 nack_total = 11;
-  float bytes_in_per_sec = 12;
-  float bytes_out_per_sec = 13;
-  float packets_in_per_sec = 14;
-  float packets_out_per_sec = 15;
-  float nack_per_sec = 16;
+  // 包
+  uint64 bytes_in = 7; // 输入字节数
+  uint64 bytes_out = 8; // 输出字节数
+  uint64 packets_in = 9; // 输入包数
+  uint64 packets_out = 10; // 输出包数
+  uint64 nack_total = 11; // NACK总数
+  float bytes_in_per_sec = 12; // 输入字节数/秒
+  float bytes_out_per_sec = 13; // 输出字节数/秒
+  float packets_in_per_sec = 14; // 输入包数/秒
+  float packets_out_per_sec = 15; // 输出包数/秒
+  float nack_per_sec = 16; // NACK/秒
 
-  // system
-  uint32 num_cpus = 17;
-  float load_avg_last1min = 18;
-  float load_avg_last5min = 19;
-  float load_avg_last15min = 20;
-  float cpu_load = 21;
-  float memory_load = 33; // deprecated
-  uint64 memory_total = 34;
-  uint64 memory_used = 35;
-  uint32 sys_packets_out = 28;
-  uint32 sys_packets_dropped = 29;
-  float sys_packets_out_per_sec = 30;
-  float sys_packets_dropped_per_sec = 31;
-  float sys_packets_dropped_pct_per_sec = 32;
+  // 系统
+  uint32 num_cpus = 17; // CPU数量
+  float load_avg_last1min = 18; // 过去1分钟平均负载
+  float load_avg_last5min = 19; // 过去5分钟平均负载
+  float load_avg_last15min = 20; // 过去15分钟平均负载
+  float cpu_load = 21; // CPU负载
+  float memory_load = 33; // 内存负载
+  uint64 memory_total = 34; // 内存总量
+  uint64 memory_used = 35; // 内存使用量
+  uint32 sys_packets_out = 28; // 系统输出包数
+  uint32 sys_packets_dropped = 29; // 系统丢包数
+  float sys_packets_out_per_sec = 30; // 系统输出包数/秒
+  float sys_packets_dropped_per_sec = 31; // 系统丢包数/秒
+  float sys_packets_dropped_pct_per_sec = 32; // 系统丢包率/秒
 
-  // retransmissions
-  uint64 retransmit_bytes_out = 22;
-  uint64 retransmit_packets_out = 23;
-  float retransmit_bytes_out_per_sec = 24;
-  float retransmit_packets_out_per_sec = 25;
+  // retransmissions 重传
+  uint64 retransmit_bytes_out = 22; // 重传字节数
+  uint64 retransmit_packets_out = 23; // 重传包数
+  float retransmit_bytes_out_per_sec = 24; // 重传字节数/秒
+  float retransmit_packets_out_per_sec = 25; // 重传包数/秒
 
-  // participant joins
-  uint64 participant_signal_connected = 26;
-  float participant_signal_connected_per_sec = 27;
-  uint64 participant_rtc_connected = 44;
-  float participant_rtc_connected_per_sec = 45;
-  uint64 participant_rtc_init = 46;
-  float participant_rtc_init_per_sec = 47;
+  // participant joins 参与者加入
+  uint64 participant_signal_connected = 26; // 参与者信号连接数
+  float participant_signal_connected_per_sec = 27; // 参与者信号连接数/秒
+  uint64 participant_rtc_connected = 44; // 参与者RTC连接数
+  float participant_rtc_connected_per_sec = 45; // 参与者RTC连接数/秒
+  uint64 participant_rtc_init = 46; // 参与者RTC初始化数
+  float participant_rtc_init_per_sec = 47; // 参与者RTC初始化数/秒
 
-  // forward metrics
-  uint32 forward_latency = 48;
-  uint32 forward_jitter = 49;
+  // forward metrics  转发指标
+  uint32 forward_latency = 48; // 转发延迟
+  uint32 forward_jitter = 49; // 转发抖动
 
   // NEXT ID: 50
 }
 
+// 开始会话
 message StartSession {
-  string room_name = 1;
-  string identity = 2;
-  string connection_id = 3;
-  // if a client is reconnecting (i.e. resume instead of restart)
-  bool reconnect = 4;
-  bool auto_subscribe = 9;
-  bool hidden = 10;
-  ClientInfo client = 11;
-  bool recorder = 12;
-  string name = 13;
-  // A user's ClaimGrants serialized in JSON
-  string grants_json = 14;
-  bool adaptive_stream = 15;
+  string room_name = 1; // 房间名称
+  string identity = 2; // 身份
+  string connection_id = 3; // 连接ID
+  // if a client is reconnecting (i.e. resume instead of restart) 如果客户端正在重新连接（即恢复而不是重新启动）
+  bool reconnect = 4; // 是否重新连接
+  bool auto_subscribe = 9; // 是否自动订阅
+  bool hidden = 10; // 是否隐藏
+  ClientInfo client = 11; // 客户端信息
+  bool recorder = 12; // 是否记录
+  string name = 13; // 名称
+  // A user's ClaimGrants serialized in JSON 用户声明的序列化JSON
+  string grants_json = 14; // 用户声明的序列化JSON
+  bool adaptive_stream = 15; // 是否自适应流
   //if reconnect, client will set current sid
-  string participant_id = 16;
-  ReconnectReason reconnect_reason = 17;
-  optional bool subscriber_allow_pause = 18;
-  bool disable_ice_lite = 19;
-  livekit.CreateRoomRequest create_room = 20;
+  string participant_id = 16; // 参与者ID
+  ReconnectReason reconnect_reason = 17; // 重新连接原因
+  optional bool subscriber_allow_pause = 18; // 订阅者是否允许暂停
+  bool disable_ice_lite = 19; // 是否禁用ICE lite
+  livekit.CreateRoomRequest create_room = 20; // 创建房间请求
 }
 
 // room info that should not be returned to clients
+// 不应返回给客户端的房间信息
 message RoomInternal {
-  AutoTrackEgress track_egress = 1;
-  AutoParticipantEgress participant_egress = 2;
-  PlayoutDelay playout_delay = 3;
-  repeated RoomAgentDispatch agent_dispatches = 5;
-  bool sync_streams = 4;
-  bool replay_enabled = 6;
+  AutoTrackEgress track_egress = 1; // 自动轨道输出
+  AutoParticipantEgress participant_egress = 2; // 自动参与者输出
+  PlayoutDelay playout_delay = 3; // 播放延迟
+  repeated RoomAgentDispatch agent_dispatches = 5; // 代理调度
+  bool sync_streams = 4; // 同步流
+  bool replay_enabled = 6; // 回放启用
 }
 
+// ICE候选人类型
 enum ICECandidateType {
-  ICT_NONE = 0;
-  ICT_TCP = 1;
-  ICT_TLS = 2;
+  ICT_NONE = 0; // 无
+  ICT_TCP = 1; // TCP
+  ICT_TLS = 2; // TLS
 }
 
+// ICE配置
 message ICEConfig {
-  ICECandidateType preference_subscriber = 1;
-  ICECandidateType preference_publisher = 2;
+  ICECandidateType preference_subscriber = 1; // 订阅者偏好
+  ICECandidateType preference_publisher = 2; // 发布者偏好
 }
