@@ -101,6 +101,7 @@ func Proto() error {
 	}
 
 	fmt.Println("generating twirp protobuf")
+
 	args := append([]string{
 		"--go_out", target,
 		"--twirp_out", target,
@@ -174,6 +175,9 @@ func Proto() error {
 	if err := psrpc.CheckCompilerVersion(psrpcPath); err != nil {
 		return err
 	}
+
+	fmt.Println("psrpcDir path", psrpcDir)
+	fmt.Println("psrpcPath path", psrpcPath)
 
 	args = append([]string{
 		"--go_out", ".",
